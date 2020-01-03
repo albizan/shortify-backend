@@ -1,0 +1,11 @@
+server:
+  port: 8080
+database:
+  type: 'postgres'
+  host: 'manny.db.elephantsql.com'
+  port: 5432
+  synchronize: true
+frontend:
+  host: https://shortify-test.netlify.com
+jwt:
+  expiresIn: 36000
