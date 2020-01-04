@@ -12,7 +12,7 @@ export class MailService {
   private auth = {
     auth: {
       api_key: process.env.MAILGUN_API_KEY,
-      domain: 'sandbox976b265266d74ae1855af72295ac3c48.mailgun.org',
+      domain: 'albertozanotti.it',
     },
   };
 
@@ -22,7 +22,7 @@ export class MailService {
 
   sendConfirmationToken(recipient: string, url: string): void {
     const message = {
-      from: 'Prova <prova@shortify.com>',
+      from: 'Activation <activation@shortify.com>',
       to: recipient,
       subject: 'Confirm your email',
       html: `Please click on this link to confirm your email: <a href="${url}">${url}</a>`,
@@ -41,7 +41,7 @@ export class MailService {
   }
   sendNewPasswordEmail(recipient: string, url: string): void {
     const message = {
-      from: 'Prova <prova@shortify.com>',
+      from: 'Activation <activation@shortify.com',
       to: recipient,
       subject: 'Set your new password',
       html: `Please follow this link to set a new password: <a href="${url}">${url}</a>`,
