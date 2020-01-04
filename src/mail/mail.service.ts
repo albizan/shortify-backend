@@ -13,6 +13,7 @@ export class MailService {
     auth: {
       api_key: process.env.MAILGUN_API_KEY,
       domain: 'albertozanotti.it',
+      host: 'api.eu.mailgun.net',
     },
   };
 
