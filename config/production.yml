@@ -1,4 +1,4 @@
 database:
-  synchronize: true
+  synchronize: false
 jwt:
   expiresIn: 3600
