@@ -27,13 +27,17 @@ export class MailService {
       subject: 'Confirm your email',
       html: `Please click on this link to confirm your email: <a href="${url}">${url}</a>`,
     };
-    this.nodemailerMailgun.sendMail(message, (err, info) => {
-      if (err) {
-        console.log(`Error: ${err}`);
-      } else {
-        console.log(`Response: ${info}`);
-      }
-    });
+    try {
+      this.nodemailerMailgun.sendMail(message, (err, info) => {
+        if (err) {
+          this.logger.log(`Error: ${err}`);
+        } else {
+          this.logger.log(`Response: ${info}`);
+        }
+      });
+    } catch (error) {
+      this.logger.log('Cannot send email');
+    }
   }
   sendNewPasswordEmail(recipient: string, url: string): void {
     const message = {
@@ -42,9 +46,11 @@ export class MailService {
       subject: 'Set your new password',
       html: `Please follow this link to set a new password: <a href="${url}">${url}</a>`,
     };
-    this.nodemailerMailgun.sendMail(message, (error, info) => {
-      if (error) {
-        this.logger.log(error.message);
+    this.nodemailerMailgun.sendMail(message, (err, info) => {
+      if (err) {
+        this.logger.log(`Error: ${err}`);
+      } else {
+        this.logger.log(`Response: ${info}`);
       }
     });
   }
