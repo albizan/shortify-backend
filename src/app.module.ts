@@ -7,13 +7,13 @@ import { LinkModule } from './link/link.module';
 
 import config from 'config';
 
-const { type, host, port, synchronize } = config.get('database');
+const { type, port, synchronize } = config.get('database');
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type,
-      host,
+      host: process.env.DB_HOST,
       port,
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
