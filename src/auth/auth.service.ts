@@ -4,6 +4,7 @@ import {
   Logger,
   InternalServerErrorException,
   BadRequestException,
+  NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import jwt from 'jsonwebtoken';
@@ -35,11 +36,11 @@ export class AuthService {
 
   private logger = new Logger('AuthService');
 
-  sendConfirmationMail(user, host) {
+  sendConfirmationMail(user) {
     const payload: JwtPayload = {
       sub: user.id,
     };
-
+    console.log(host)
     jwt.sign(
       payload,
       process.env.MAIL_SECRET,
@@ -81,7 +82,7 @@ export class AuthService {
         password: hash,
       });
       // Send verification mail
-      this.sendConfirmationMail(user, host);
+      this.sendConfirmationMail(user);
       return user;
     } catch (error) {
       throw error;
@@ -121,6 +122,19 @@ export class AuthService {
       this.sendNewPasswordMail(user.id, email);
     }
   }
+
+  async resendConfirmationMail(email) {
+    const user = await this.userService.findUserByEmail(email);
+    if (!user) {
+      console.log('User not found')
+      throw new UnauthorizedException('User not Found');
+    }
+    console.log(user)
+    if (!user.isActive) {
+      this.sendConfirmationMail(user);
+    }
+  }
+
 
   async changePassword(newPasswordDto: NewPasswordDto) {
     const { token, password_1, password_2 } = newPasswordDto;
