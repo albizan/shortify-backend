@@ -6,6 +6,6 @@ database:
   port: 5432
   synchronize: true
 frontend:
-  host: https://shortify-test.netlify.com
+  host: http://localhost:3000
 jwt:
   expiresIn: 36000
