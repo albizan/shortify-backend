@@ -33,7 +33,7 @@ export class MailService {
         if (err) {
           this.logger.log(`Error: ${err}`);
         } else {
-          this.logger.log(`Response: ${info}`);
+          this.logger.log('Email sent');
         }
       });
     } catch (error) {
