@@ -1,4 +1,4 @@
-import { Controller, Post, Body, ValidationPipe } from '@nestjs/common';
+import { Controller, Post, Body, ValidationPipe, Param } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { CredentialsDto } from './dto/credentials.dto';
@@ -28,6 +28,11 @@ export class AuthController {
   @Post('amnesia')
   amnesia(@Body(ValidationPipe) amnesiaDto: AmnesiaDto) {
     return this.authService.amnesia(amnesiaDto);
+  }
+
+  @Post('resend-confirmation-mail')
+  resendConfirmationMail(@Body('email') email) {
+    return this.authService.resendConfirmationMail(email);
   }
 
   @Post('change-password')
