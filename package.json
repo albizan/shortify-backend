@@ -5,7 +5,6 @@
   "author": "",
   "license": "MIT",
   "scripts": {
-    "postinstall": "yarn run prestart:prod",
     "build": "rimraf dist && tsc -p tsconfig.build.json",
     "prestart:prod": "rimraf dist && tsc -p tsconfig.build.json",
     "format": "prettier --write \"src/**/*.ts\"",
