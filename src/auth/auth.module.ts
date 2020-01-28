@@ -11,8 +11,6 @@ import { AuthService } from './auth.service';
 import { UserModule } from '../user/user.module';
 import { MailModule } from '../mail/mail.module';
 
-const { expiresIn } = config.get('jwt');
-
 @Module({
   imports: [
     UserModule,
@@ -21,7 +19,7 @@ const { expiresIn } = config.get('jwt');
     JwtModule.register({
       secret: process.env.SECRET,
       signOptions: {
-        expiresIn: expiresIn,
+        expiresIn: parseInt(process.env.JWT_EXPIRES_IN),
       },
     }),
   ],

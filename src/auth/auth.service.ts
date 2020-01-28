@@ -3,15 +3,11 @@ import {
   UnauthorizedException,
   Logger,
   InternalServerErrorException,
-  BadRequestException,
-  NotFoundException,
+  BadRequestException
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import config from 'config';
-
-const { host } = config.get('frontend');
 
 // Auth Module
 import { RegisterDto } from './dto/register.dto';
@@ -40,7 +36,6 @@ export class AuthService {
     const payload: JwtPayload = {
       sub: user.id,
     };
-    console.log(host)
     jwt.sign(
       payload,
       process.env.MAIL_SECRET,
@@ -49,7 +44,7 @@ export class AuthService {
         if (error) {
           throw new InternalServerErrorException('e-mail was not sent');
         }
-        const url = `${host}/confirm-email/${token}`;
+        const url = `${process.env.FRONTEND_HOST}/confirm-email/${token}`;
         this.mailService.sendConfirmationToken(user.email, url);
       },
     );
@@ -66,7 +61,7 @@ export class AuthService {
         if (error) {
           throw new InternalServerErrorException('e-mail was not sent');
         }
-        const url = `${host}/new-password/${token}`;
+        const url = `${process.env.FRONTEND_HOST}/new-password/${token}`;
         this.mailService.sendNewPasswordEmail(email, url);
       },
     );
