@@ -124,7 +124,6 @@ export class AuthService {
       console.log('User not found')
       throw new UnauthorizedException('User not Found');
     }
-    console.log(user)
     if (!user.isActive) {
       this.sendConfirmationMail(user);
     }
