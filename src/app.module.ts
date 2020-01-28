@@ -5,10 +5,6 @@ import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import { LinkModule } from './link/link.module';
 
-import config from 'config';
-
-const { type, port, synchronize } = config.get('database');
-
 @Module({
   imports: [
     TypeOrmModule.forRoot({
