@@ -12,7 +12,7 @@ export class MailService {
   private auth = {
     auth: {
       api_key: process.env.MAILGUN_API_KEY,
-      domain: 'albertozanotti.it',
+      domain: process.env.EMAIL_DOMAIN,
     },
     host: 'api.eu.mailgun.net',
   };
@@ -26,19 +26,15 @@ export class MailService {
       from: 'Activation <activation@shortify.com>',
       to: recipient,
       subject: 'Confirm your email',
-      html: `Please click on this link to confirm your email: <a href="${url}">${url}</a>`,
+      html: `Please follow this link to confirm your email: <a href="${url}">${url}</a>`,
     };
-    try {
-      this.nodemailerMailgun.sendMail(message, (err, info) => {
-        if (err) {
-          this.logger.log(`Error: ${err}`);
-        } else {
-          this.logger.log('Email sent');
-        }
-      });
-    } catch (error) {
-      this.logger.log('Cannot send email');
-    }
+    this.nodemailerMailgun.sendMail(message, (err, info) => {
+      if (err) {
+        this.logger.log(`Error: ${err}`);
+      } else {
+        this.logger.log(`Confirmation email sent to: ${recipient}`);
+      }
+    });
   }
   sendNewPasswordEmail(recipient: string, url: string): void {
     const message = {
@@ -51,7 +47,7 @@ export class MailService {
       if (err) {
         this.logger.log(`Error: ${err}`);
       } else {
-        this.logger.log(`Response: ${info}`);
+        this.logger.log(`SetNewPassword email sent to: ${recipient}`);
       }
     });
   }
