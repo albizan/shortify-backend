@@ -12,7 +12,7 @@ const { type, port, synchronize } = config.get('database');
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type,
+      type: 'postgres',
       host: process.env.DB_HOST,
       port: parseInt(process.env.DB_PORT),
       username: process.env.DB_USER,
