@@ -23,7 +23,7 @@ export class MailService {
 
   sendConfirmationToken(recipient: string, url: string): void {
     const message = {
-      from: 'Activation <activation@shortify.com>',
+      from: 'postmaster@albertozanotti.it',
       to: recipient,
       subject: 'Confirm your email',
       html: `Please follow this link to confirm your email: <a href="${url}">${url}</a>`,
