@@ -15,5 +15,5 @@ COPY . .
 #Build from typescript source
 RUN npm run build
 
-EXPOSE 80
+EXPOSE 443
 CMD node dist/main.js
