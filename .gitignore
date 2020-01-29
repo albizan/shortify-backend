@@ -3,6 +3,7 @@
 /node_modules
 /secrets
 docker-compose.yml
+volumes/
 
 # Logs
 logs
