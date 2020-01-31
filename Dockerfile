@@ -3,7 +3,7 @@ RUN mkdir -p /code
 WORKDIR /code
 COPY package.json .
 COPY yarn.lock .
-RUN yarn install
+RUN yarn install --silent
 
 # Bundle app source
 COPY . .
