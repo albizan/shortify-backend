@@ -72,12 +72,12 @@ export class UserService {
         relations: ['links'],
       });
       const stats = links.reduce(
-        (stats, link) => {
+        (reducedStats, link) => {
           if (link.isActive) {
-            stats.active++;
+            reducedStats.active++;
           }
-          stats.clicks += link.clicks;
-          return stats;
+          reducedStats.clicks += link.clicks;
+          return reducedStats;
         },
         {
           active: 0,
@@ -103,12 +103,12 @@ export class UserService {
 
   async createLink(
     userId: string,
-    AddLinkDto: AddLinkDto,
+    addLinkDto: AddLinkDto,
   ): Promise<LinkResponseObject> {
     try {
       // Retreive user object
       const user = await this.findUserById(userId);
-      return await this.linkService.createLink(user, AddLinkDto);
+      return await this.linkService.createLink(user, addLinkDto);
     } catch (error) {
       throw new InternalServerErrorException(error, 'Cannot find user');
     }
@@ -125,7 +125,6 @@ export class UserService {
   }
   async patchLink(linkId: string, partialDto: Partial<AddLinkDto>) {
     try {
-      console.log(partialDto);
       return await this.linkService.patchLink(linkId, partialDto);
     } catch (error) {
       throw new InternalServerErrorException(error, 'Cannot find user');

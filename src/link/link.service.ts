@@ -28,7 +28,6 @@ export class LinkService {
       const link: Link = await this.linkRepository.findOne(id);
       link.clicks++;
       this.linkRepository.save(link);
-      console.log(link);
       if (!link.isActive) {
         throw new NotFoundException('Link cannot be found');
       }
@@ -70,14 +69,13 @@ export class LinkService {
     }
   }
   async patchLink(linkId: string, partialDto) {
-    console.log('Patch Link with id', linkId);
     try {
       const link = await this.linkRepository.preload({
         id: linkId,
         ...partialDto,
       });
       this.linkRepository.save(link);
-      //await this.linkRepository.save(link);
+      // await this.linkRepository.save(link);
     } catch (error) {
       throw new InternalServerErrorException(error, 'Cannot delete link');
     }

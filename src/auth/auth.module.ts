@@ -18,7 +18,7 @@ import { MailModule } from '../mail/mail.module';
     JwtModule.register({
       secret: process.env.SECRET,
       signOptions: {
-        expiresIn: parseInt(process.env.JWT_EXPIRES_IN),
+        expiresIn: parseInt(process.env.JWT_EXPIRES_IN, 10),
       },
     }),
   ],

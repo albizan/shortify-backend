@@ -121,7 +121,6 @@ export class AuthService {
   async resendConfirmationMail(email) {
     const user = await this.userService.findUserByEmail(email);
     if (!user) {
-      console.log('User not found')
       throw new UnauthorizedException('User not Found');
     }
     if (!user.isActive) {
@@ -131,17 +130,17 @@ export class AuthService {
 
 
   async changePassword(newPasswordDto: NewPasswordDto) {
-    const { token, password_1, password_2 } = newPasswordDto;
-    if (password_1 !== password_2) {
-      throw new BadRequestException("Invalid Token - Passwords don't match");
+    const { token, password, retypedPassword } = newPasswordDto;
+    if (password !== retypedPassword) {
+      throw new BadRequestException('Invalid Token - Passwords don\'t match');
     }
     try {
       const decoded: any = jwt.verify(token, process.env.AMNESIA_SECRET);
-      let user = await this.userService.findUserById(
+      const user = await this.userService.findUserById(
         (decoded as JwtDecoded).sub,
       );
       const hash: string = await bcrypt.hash(
-        password_1,
+        password,
         await bcrypt.genSalt(),
       );
       const newUser: UserResponseObject = await this.userService.changePassword(
