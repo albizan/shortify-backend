@@ -27,6 +27,9 @@ export class User extends BaseEntity {
   @Column()
   isActive: boolean;
 
-  @OneToMany(type => Link, link => link.user)
+  @OneToMany(
+    type => Link,
+    link => link.user,
+  )
   links: Link[];
 }

@@ -29,6 +29,9 @@ export class Link extends BaseEntity {
   @CreateDateColumn()
   createdAt: Date;
 
-  @ManyToOne(type => User, user => user.links)
+  @ManyToOne(
+    type => User,
+    user => user.links,
+  )
   user: User;
 }

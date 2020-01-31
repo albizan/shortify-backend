@@ -3,7 +3,7 @@ import {
   UnauthorizedException,
   Logger,
   InternalServerErrorException,
-  BadRequestException
+  BadRequestException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import jwt from 'jsonwebtoken';
@@ -128,21 +128,17 @@ export class AuthService {
     }
   }
 
-
   async changePassword(newPasswordDto: NewPasswordDto) {
     const { token, password, retypedPassword } = newPasswordDto;
     if (password !== retypedPassword) {
-      throw new BadRequestException('Invalid Token - Passwords don\'t match');
+      throw new BadRequestException("Invalid Token - Passwords don't match");
     }
     try {
       const decoded: any = jwt.verify(token, process.env.AMNESIA_SECRET);
       const user = await this.userService.findUserById(
         (decoded as JwtDecoded).sub,
       );
-      const hash: string = await bcrypt.hash(
-        password,
-        await bcrypt.genSalt(),
-      );
+      const hash: string = await bcrypt.hash(password, await bcrypt.genSalt());
       const newUser: UserResponseObject = await this.userService.changePassword(
         user,
         hash,
