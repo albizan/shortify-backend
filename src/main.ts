@@ -1,7 +1,11 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
-import * as fs from 'fs';
 
+// Avoid dotenv.config in production environment
+import * as dotenv from 'dotenv';
+if(process.env.NODE_ENV !== 'production') {
+  dotenv.config();
+}
+
+import * as fs from 'fs';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common';
