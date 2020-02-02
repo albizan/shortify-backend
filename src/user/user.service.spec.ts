@@ -50,7 +50,7 @@ describe('UserService', () => {
       expect(mockUserRepository.save).toHaveBeenCalledTimes(1)
     })
 
-    it('Should throw error if userRepository.save throws error', async () => {
+    it('Should throw Internal Server Error if userRepository.save throws error', async () => {
       mockUserRepository.create.mockReturnValue({
         id: 'Test Id',
         links: []
@@ -60,7 +60,25 @@ describe('UserService', () => {
       expect(mockUserRepository.create).not.toHaveBeenCalled()
       expect(mockUserRepository.save).not.toHaveBeenCalled()
       // service.register is an async function, I need to use rejects before toThrow
-      await expect(service.register(mockRegisterDto)).rejects.toThrow()
+      await expect(service.register(mockRegisterDto)).rejects.toThrowError('Internal Error, user was not saved')
+      expect(mockUserRepository.create).toHaveBeenCalledTimes(1)
+      expect(mockUserRepository.save).toHaveBeenCalledTimes(1)
+    })
+
+    it('Should throw Conflict Exception if userRepository.save throws error with code 23505', async () => {
+      const error: any = new Error()
+      error.code = '23505'
+      mockUserRepository.create.mockReturnValue({
+        id: 'Test Id',
+        links: []
+      })
+      mockUserRepository.save.mockRejectedValue(error);
+      
+
+      expect(mockUserRepository.create).not.toHaveBeenCalled()
+      expect(mockUserRepository.save).not.toHaveBeenCalled()
+      // service.register is an async function, I need to use rejects before toThrow
+      await expect(service.register(mockRegisterDto)).rejects.toThrowError('Username already exists')
       expect(mockUserRepository.create).toHaveBeenCalledTimes(1)
       expect(mockUserRepository.save).toHaveBeenCalledTimes(1)
     })
