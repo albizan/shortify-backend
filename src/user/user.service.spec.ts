@@ -38,6 +38,7 @@ describe('UserService', () => {
         id: 'Test Id',
         links: []
       })
+      mockUserRepository.save.mockResolvedValue('User saved')
 
       expect(mockUserRepository.create).not.toHaveBeenCalled()
       expect(mockUserRepository.save).not.toHaveBeenCalled()
@@ -49,7 +50,7 @@ describe('UserService', () => {
       expect(mockUserRepository.save).toHaveBeenCalledTimes(1)
     })
 
-    it('Should throw error', async () => {
+    it('Should throw error if userRepository.save throws error', async () => {
       mockUserRepository.create.mockReturnValue({
         id: 'Test Id',
         links: []
@@ -60,6 +61,8 @@ describe('UserService', () => {
       expect(mockUserRepository.save).not.toHaveBeenCalled()
       // service.register is an async function, I need to use rejects before toThrow
       await expect(service.register(mockRegisterDto)).rejects.toThrow()
+      expect(mockUserRepository.create).toHaveBeenCalledTimes(1)
+      expect(mockUserRepository.save).toHaveBeenCalledTimes(1)
     })
   })
 });
