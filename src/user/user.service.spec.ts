@@ -54,13 +54,12 @@ describe('UserService', () => {
         id: 'Test Id',
         links: []
       })
-      mockUserRepository.save.mockImplementation(() => {
-        Promise.reject(new Error())
-      })
+      mockUserRepository.save.mockRejectedValue(new Error('Test Error'));
 
       expect(mockUserRepository.create).not.toHaveBeenCalled()
       expect(mockUserRepository.save).not.toHaveBeenCalled()
-      expect(async () => await service.register(mockRegisterDto)).toThrowError()
+      // service.register is an async function, I need to use rejects before toThrow
+      await expect(service.register(mockRegisterDto)).rejects.toThrow()
     })
   })
 });
