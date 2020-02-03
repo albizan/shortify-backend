@@ -13,7 +13,9 @@ describe('UserService', () => {
     save: jest.fn(),
     findOne: jest.fn()
   })))();
-  const mockLinkService = {}
+  const mockLinkService = new (jest.fn(() => ({
+    getLinksWithQueryBuilder: jest.fn(),
+  })))();
   const mockRegisterDto = {
     name: 'Test Name',
     email: 'Test Email',
@@ -176,6 +178,19 @@ describe('UserService', () => {
       mockUserRepository.findOne.mockRejectedValue(new Error('Test Error'))
 
       expect(service.getUserStats('Test Id')).rejects.toThrowError('Test Error')
+    })
+  })
+
+  // Test getUserLinks
+  describe('getUserLinks Method', () => {
+    it('Should return user links if there is any', async () => {
+      const mockLinks = {linkID: 1}
+      mockLinkService.getLinksWithQueryBuilder.mockResolvedValue(mockLinks)
+
+      expect(mockLinkService.getLinksWithQueryBuilder).not.toHaveBeenCalled()
+      const result = await service.getUserLinks('Test Id', 3, 5)
+      expect(result).toEqual(mockLinks)
+      expect(mockLinkService.getLinksWithQueryBuilder).toHaveBeenLastCalledWith('Test Id', 10, 5)
     })
   })
 });
