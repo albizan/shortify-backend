@@ -42,7 +42,7 @@ describe('UserService', () => {
     expect(service).toBeDefined();
   });
 
-  // Test Register Method
+  // Test register Method
   describe('register Method', () => {
     it('Should create new users if no errors are thrown', async () => {
       mockUserRepository.create.mockReturnValue(mockUser)
@@ -93,7 +93,7 @@ describe('UserService', () => {
     })
   })
 
-  // Test SanitizeUser Method
+  // Test sanitizeUser Method
   describe('sanitizeUser Method', () => {
     it('Should sanitize users', () => {
       let user: any = new User()
@@ -114,6 +114,7 @@ describe('UserService', () => {
 
   })
 
+  // Test findUserByEmail Method
   describe('findUserByEmail Method', () => {
     it('Should return a user with the given email', async ()=> {
       const mockUser = {
@@ -124,6 +125,57 @@ describe('UserService', () => {
       const user = await service.findUserByEmail('Test Email')
       expect(user).toEqual(mockUser)
       expect(mockUserRepository.findOne).toHaveBeenCalledWith({email: 'Test Email'})
+    })
+  })
+
+  // Test findUserById Method
+  describe('findUserById Method', () => {
+    it('Should return a user with the given id', async ()=> {
+      const mockUser = {
+        id: 'Test Id'
+      }
+      mockUserRepository.findOne.mockResolvedValue(mockUser)
+
+      const user = await service.findUserById('Test Id')
+      expect(user).toEqual(mockUser)
+      expect(mockUserRepository.findOne).toHaveBeenCalledWith('Test Id')
+    })
+  })
+  
+  // Test getUserStats Method
+  describe('getUserStats Method', () => {
+    it('Should return stats if no errors are thrown', async ()=> {
+      const mockUser = {
+        id: 'Test Id'
+      }
+      const mockLinks = [{
+        isActive: true,
+        clicks: 2
+      },
+      {
+        isActive: false,
+        clicks: 10
+      }]
+
+      mockUserRepository.findOne.mockResolvedValue({
+        links: mockLinks 
+      })
+
+      const result = await service.getUserStats('Test Id')
+      expect(result).toEqual({
+        totalLinks: 2,
+        activeLinks: 1,
+        totalClicks: 12,
+      })
+      expect(mockUserRepository.findOne).toHaveBeenCalledWith('Test Id', {
+        relations: ['links'],
+      })
+    })
+
+    it('Should throw error if userRepository.findOne throws Error', () => {
+      mockUserRepository.findOne.mockRejectedValue(new Error('Test Error'))
+
+      expect(service.getUserStats('Test Id')).rejects.toThrowError('Test Error')
     })
   })
 });
