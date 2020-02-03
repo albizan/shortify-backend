@@ -10,7 +10,8 @@ describe('UserService', () => {
   // Define Mocks
   const mockUserRepository = new (jest.fn(() => ({
     create: jest.fn(),
-    save: jest.fn()
+    save: jest.fn(),
+    findOne: jest.fn()
   })))();
   const mockLinkService = {}
   const mockRegisterDto = {
@@ -111,5 +112,18 @@ describe('UserService', () => {
     })
     
 
+  })
+
+  describe('findUserByEmail Method', () => {
+    it('Should return a user with the given email', async ()=> {
+      const mockUser = {
+        id: 'Test Id'
+      }
+      mockUserRepository.findOne.mockResolvedValue(mockUser)
+
+      const user = await service.findUserByEmail('Test Email')
+      expect(user).toEqual(mockUser)
+      expect(mockUserRepository.findOne).toHaveBeenCalledWith({email: 'Test Email'})
+    })
   })
 });
