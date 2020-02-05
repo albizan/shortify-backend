@@ -16,6 +16,8 @@ describe('UserService', () => {
   const mockLinkService = new (jest.fn(() => ({
     createLink: jest.fn(),
     getLinksWithQueryBuilder: jest.fn(),
+    deleteLink: jest.fn(),
+    patchLink: jest.fn(),
   })))();
   const mockRegisterDto = {
     name: 'Test Name',
@@ -239,6 +241,54 @@ describe('UserService', () => {
       ).rejects.toThrowError('Cannot find user');
       expect(service.findUserById).toHaveBeenCalledWith('Test Id');
       expect(mockLinkService.createLink).not.toHaveBeenCalled();
+    });
+  });
+
+  // test deleteLink
+  describe('deleteLink Method', () => {
+    it('Should return the result of linkService.deleteLink', async () => {
+      service.findUserById = jest.fn().mockResolvedValue(mockUser);
+      mockLinkService.deleteLink.mockResolvedValue('test');
+
+      const result = await service.deleteLink('userId', 'linkId');
+      expect(result).toEqual('test');
+      expect(mockLinkService.deleteLink).toHaveBeenCalledWith(
+        mockUser,
+        'linkId',
+      );
+    });
+
+    it('Should throw if no user are found', () => {
+      service.findUserById = jest.fn().mockRejectedValue(mockUser);
+
+      expect(service.deleteLink('userId', 'linkId')).rejects.toThrowError(
+        'Cannot find user',
+      );
+      expect(mockLinkService.deleteLink).not.toHaveBeenCalled();
+    });
+  });
+
+  // Test patchLink
+  describe('patchLink Method', () => {
+    const mockDto = {};
+
+    it('Should return the return value of linkService.patchLink', async () => {
+      mockLinkService.patchLink.mockResolvedValue('test return value');
+
+      const result = await service.patchLink('test id', mockDto);
+      expect(result).toEqual('test return value');
+      expect(mockLinkService.patchLink).toHaveBeenCalledWith(
+        'test id',
+        mockDto,
+      );
+    });
+
+    it('Should throw error if no links are found', async () => {
+      mockLinkService.patchLink.mockRejectedValue(new Error('Test error'));
+
+      expect(service.patchLink('test id', mockDto)).rejects.toThrowError(
+        'Test error',
+      );
     });
   });
 });
