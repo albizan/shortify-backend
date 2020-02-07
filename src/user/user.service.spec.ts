@@ -8,17 +8,17 @@ describe('UserService', () => {
   let service: UserService;
 
   // Define Mocks
-  const mockUserRepository = new (jest.fn(() => ({
+  const mockUserRepository = {
     create: jest.fn(),
     save: jest.fn(),
     findOne: jest.fn(),
-  })))();
-  const mockLinkService = new (jest.fn(() => ({
+  };
+  const mockLinkService = {
     createLink: jest.fn(),
     getLinksWithQueryBuilder: jest.fn(),
     deleteLink: jest.fn(),
     patchLink: jest.fn(),
-  })))();
+  };
   const mockRegisterDto = {
     name: 'Test Name',
     email: 'Test Email',
@@ -83,9 +83,7 @@ describe('UserService', () => {
       expect(mockUserRepository.create).not.toHaveBeenCalled();
       expect(mockUserRepository.save).not.toHaveBeenCalled();
       // service.register is an async function, I need to use rejects before toThrow
-      expect(service.register(mockRegisterDto)).rejects.toThrowError(
-        'Internal Error, user was not saved',
-      );
+      expect(service.register(mockRegisterDto)).rejects.toThrow();
       expect(mockUserRepository.create).toHaveBeenCalledTimes(1);
       expect(mockUserRepository.save).toHaveBeenCalledTimes(1);
     });
@@ -194,9 +192,7 @@ describe('UserService', () => {
     it('Should throw error if userRepository.findOne throws Error', () => {
       mockUserRepository.findOne.mockRejectedValue(new Error('Test Error'));
 
-      expect(service.getUserStats('Test Id')).rejects.toThrowError(
-        'Test Error',
-      );
+      expect(service.getUserStats('Test Id')).rejects.toThrow();
     });
   });
 
@@ -261,9 +257,7 @@ describe('UserService', () => {
     it('Should throw if no user are found', () => {
       service.findUserById = jest.fn().mockRejectedValue(mockUser);
 
-      expect(service.deleteLink('userId', 'linkId')).rejects.toThrowError(
-        'Cannot find user',
-      );
+      expect(service.deleteLink('userId', 'linkId')).rejects.toThrow();
       expect(mockLinkService.deleteLink).not.toHaveBeenCalled();
     });
   });
@@ -286,9 +280,7 @@ describe('UserService', () => {
     it('Should throw error if no links are found', async () => {
       mockLinkService.patchLink.mockRejectedValue(new Error('Test error'));
 
-      expect(service.patchLink('test id', mockDto)).rejects.toThrowError(
-        'Test error',
-      );
+      expect(service.patchLink('test id', mockDto)).rejects.toThrow();
     });
   });
 });
