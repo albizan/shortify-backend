@@ -51,6 +51,7 @@ export class LinkService {
     link.original = original;
     link.isActive = isActive;
     link.user = user;
+    link.clicks = 0;
 
     try {
       await this.linkRepository.save(link);
@@ -80,7 +81,6 @@ export class LinkService {
       throw new InternalServerErrorException(error, 'Cannot delete link');
     }
   }
-
   async getLinksWithQueryBuilder(
     userId: string,
     from: number,
