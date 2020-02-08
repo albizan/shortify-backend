@@ -11,6 +11,7 @@ describe('Link Service', () => {
   const mockLinkRepository = {
     findOne: jest.fn(),
     save: jest.fn(),
+    create: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -66,5 +67,44 @@ describe('Link Service', () => {
       mockLinkRepository.findOne.mockRejectedValue(new Error());
       expect(service.getOriginalLink()).rejects.toThrow();
     });
+  });
+
+  describe('createLink Method', () => {
+    it('Should return a newly created link', async () => {
+      const mockUser = {
+        id: 'id',
+        name: 'name',
+        email: 'email',
+      };
+      const mockAddLinkDto = {
+        title: 'test title',
+        original: 'test original',
+        isActive: false,
+      };
+      mockLinkRepository.create.mockReturnValue({});
+
+      const result = await service.createLink(mockUser, mockAddLinkDto);
+      expect(result.user).toEqual(mockUser);
+      expect(result.title).toEqual('test title');
+      expect(result.original).toEqual('test original');
+      expect(result.isActive).toEqual(false);
+      expect(result.clicks).toEqual(0);
+    });
+  });
+
+  it('Should throw if save throws', () => {
+    const mockUser = {
+      id: 'id',
+      name: 'name',
+      email: 'email',
+    };
+    const mockAddLinkDto = {
+      title: 'test title',
+      original: 'test original',
+      isActive: false,
+    };
+    mockLinkRepository.save.mockRejectedValue(new Error());
+
+    expect(service.createLink(mockUser, mockAddLinkDto)).rejects.toThrow();
   });
 });
