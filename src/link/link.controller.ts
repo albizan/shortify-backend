@@ -1,4 +1,4 @@
-import { Controller, Logger, Get, Param } from '@nestjs/common';
+import { Controller, Logger, Get, Param, Redirect } from '@nestjs/common';
 import { LinkService } from './link.service';
 
 @Controller('link')
@@ -9,7 +9,13 @@ export class LinkController {
   private logger: Logger;
 
   @Get(':id')
-  getOriginalLink(@Param() params) {
-    return this.linkService.getOriginalLink(params.id);
+  @Redirect('shorify.albertozanotti.it')
+  async getOriginalLink(@Param() params) {
+    // return this.linkService.getOriginalLink(params.id);
+    const url = await this.linkService.getOriginalLink(params.id);
+    return {
+      statusCode: 301,
+      url: url.original,
+    };
   }
 }
