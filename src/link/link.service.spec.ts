@@ -11,6 +11,8 @@ describe('Link Service', () => {
   const mockLinkRepository = {
     findOne: jest.fn(),
     save: jest.fn(),
+    create: jest.fn(),
+    delete: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -65,6 +67,52 @@ describe('Link Service', () => {
     it('Should throw error link is not found', () => {
       mockLinkRepository.findOne.mockRejectedValue(new Error());
       expect(service.getOriginalLink()).rejects.toThrow();
+    });
+  });
+
+  describe('createLink Method', () => {
+    const mockUser = {
+      id: 'id',
+      name: 'name',
+      email: 'email',
+    };
+    const mockAddLinkDto = {
+      title: 'test title',
+      original: 'test original',
+      isActive: false,
+    };
+    it('Should return a newly created link', async () => {
+      mockLinkRepository.create.mockReturnValue({});
+
+      const result = await service.createLink(mockUser, mockAddLinkDto);
+      expect(result.user).toEqual(mockUser);
+      expect(result.title).toEqual('test title');
+      expect(result.original).toEqual('test original');
+      expect(result.isActive).toEqual(false);
+      expect(result.clicks).toEqual(0);
+    });
+
+    it('Should throw if save throws', () => {
+      mockLinkRepository.save.mockRejectedValue(new Error());
+
+      expect(service.createLink(mockUser, mockAddLinkDto)).rejects.toThrow();
+    });
+  });
+
+  describe('deleteLink Method', () => {
+    const mockUser = {};
+
+    it('Should return deleted link from db', async () => {
+      mockLinkRepository.delete.mockResolvedValue('Ok');
+      const result = await service.deleteLink(mockUser, 'Link ID');
+      expect(result).toEqual('Ok');
+      expect(mockLinkRepository.delete).toHaveBeenCalledWith('Link ID');
+    });
+
+    it('Should throw if no link is found in db', () => {
+      mockLinkRepository.delete.mockRejectedValue(new Error());
+
+      expect(service.deleteLink(mockUser, 'Link id')).rejects.toThrow();
     });
   });
 });
